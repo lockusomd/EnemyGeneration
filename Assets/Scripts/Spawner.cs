@@ -3,7 +3,7 @@ using UnityEngine.Pool;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] GameObject _enemy;
+    [SerializeField] Enemy _prefab;
     private ObjectPool<GameObject> _pool;
 
     private int _defaultCapacity = 5;
@@ -23,7 +23,7 @@ public class Spawner : MonoBehaviour
     private void Awake()
     {
         _pool = new ObjectPool<GameObject>(
-            createFunc: () => Instantiate(_enemy),
+            createFunc: () => Instantiate(_prefab.gameObject),
             actionOnGet: (obj) => ActionOnGet(obj),
             actionOnRelease: (obj) => obj.SetActive(false),
             actionOnDestroy: (obj) => Destroy(obj),
@@ -46,6 +46,7 @@ public class Spawner : MonoBehaviour
     {
         obj.transform.position = GetPosition();
         obj.transform.rotation = GetRotation();
+        obj.GetComponent<Mover>().SetDirection(Vector3.forward);
         obj.SetActive(true);
     }
 

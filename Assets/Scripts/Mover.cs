@@ -3,14 +3,20 @@ using UnityEngine;
 public class Mover : MonoBehaviour
 {
     private int _speed = 1;
+    private Vector3 _direction;
 
     private void Update()
     {
-        MoveForward();
+        Move();
     }
 
-    private void MoveForward()
+    private void Move()
     {
-        transform.Translate(0, 0, _speed * Time.deltaTime);
+        transform.Translate(_direction * _speed * Time.deltaTime);
+    }
+
+    public void SetDirection(Vector3 direction)
+    {
+        _direction = direction;
     }
 }
