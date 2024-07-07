@@ -45,7 +45,7 @@ public class Spawner : MonoBehaviour
     private void ActionOnGet(GameObject obj)
     {
         obj.transform.position = GetPosition();
-        obj.GetComponent<Mover>().SetDirection(Vector3.forward);
+        obj.GetComponent<Mover>().SetDirection(GetDirection().normalized);
         obj.SetActive(true);
     }
 
@@ -69,6 +69,22 @@ public class Spawner : MonoBehaviour
         int numberOfSpawn = Random.Range(0, spawnPoints.Length);
 
         return spawnPoints[numberOfSpawn];
+    }
+
+    private Vector3 GetDirection()
+    {
+        int numberX;
+        int numberZ;
+
+        do
+        {
+            numberX = Random.Range(-1, 1);
+            numberZ = Random.Range(-1, 1);
+        } while (numberX == 0 && numberZ == 0);
+
+        Vector3 direction = new Vector3(numberX, 0, numberZ);
+
+        return direction;
     }
 
     private Quaternion GetRotation()
