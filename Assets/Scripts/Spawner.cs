@@ -45,8 +45,7 @@ public class Spawner : MonoBehaviour
     private void ActionOnGet(GameObject obj)
     {
         obj.transform.position = GetPosition();
-        obj.transform.rotation = GetRotation();
-        obj.GetComponent<Mover>().SetDirection(Vector3.forward.normalized);
+        obj.GetComponent<Mover>().SetDirection(Vector3.forward);
         obj.SetActive(true);
     }
 
