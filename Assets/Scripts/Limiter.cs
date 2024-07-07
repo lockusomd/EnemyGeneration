@@ -1,6 +1,3 @@
 using UnityEngine;
 
-public class Limiter : MonoBehaviour
-{
-
-}
+public class Limiter : MonoBehaviour { }

@@ -4,29 +4,19 @@ using UnityEngine.Pool;
 public class Spawner : MonoBehaviour
 {
     [SerializeField] Enemy _prefab;
-    private ObjectPool<GameObject> _pool;
+    private ObjectPool<Enemy> _pool;
 
     private int _defaultCapacity = 5;
     private int _maxSize = 10;
     private int _repeatRate = 2;
 
-    private void OnEnable()
-    {
-        Enemy.Died += SendToPool;
-    }
-
-    private void OnDisable()
-    {
-        Enemy.Died -= SendToPool;
-    }
-
     private void Awake()
     {
-        _pool = new ObjectPool<GameObject>(
-            createFunc: () => Instantiate(_prefab.gameObject),
-            actionOnGet: (obj) => ActionOnGet(obj),
-            actionOnRelease: (obj) => obj.SetActive(false),
-            actionOnDestroy: (obj) => Destroy(obj),
+        _pool = new ObjectPool<Enemy>(
+            createFunc: () => Instantiate(_prefab),
+            actionOnGet: (enemy) => ActionOnGet(enemy),
+            actionOnRelease: (enemy) => enemy.gameObject.SetActive(false),
+            actionOnDestroy: (enemy) => Delete(enemy),
             collectionCheck: true,
             defaultCapacity: _defaultCapacity,
             maxSize: _maxSize);
@@ -42,11 +32,13 @@ public class Spawner : MonoBehaviour
         _pool.Get();
     }
 
-    private void ActionOnGet(GameObject obj)
+    private void ActionOnGet(Enemy enemy)
     {
-        obj.transform.position = GetPosition();
-        obj.GetComponent<Mover>().SetDirection(GetDirection().normalized);
-        obj.SetActive(true);
+        enemy.Died += SendToPool;
+
+        enemy.transform.position = GetPosition();
+        enemy.GetComponent<Mover>().SetDirection(GetDirection().normalized);
+        enemy.gameObject.SetActive(true);
     }
 
     private Vector3 GetPosition()
@@ -94,8 +86,17 @@ public class Spawner : MonoBehaviour
         return rotation;
     }
 
-    private void SendToPool(GameObject obj)
+    private void SendToPool(Enemy enemy)
     {
-        _pool.Release(obj);
+        enemy.Died -= SendToPool;
+
+        _pool.Release(enemy);
+    }
+
+    private void Delete(Enemy enemy)
+    {
+        enemy.Died -= SendToPool;
+
+        Destroy(enemy);
     }
 }
