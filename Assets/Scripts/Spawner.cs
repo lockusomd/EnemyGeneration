@@ -46,7 +46,7 @@ public class Spawner : MonoBehaviour
     {
         obj.transform.position = GetPosition();
         obj.transform.rotation = GetRotation();
-        obj.GetComponent<Mover>().SetDirection(Vector3.forward);
+        obj.GetComponent<Mover>().SetDirection(Vector3.forward.normalized);
         obj.SetActive(true);
     }
 
